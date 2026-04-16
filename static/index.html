@@ -2,168 +2,80 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Платформа по культуре народов России</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
-        .container { max-width: 800px; margin: auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; text-align: center; }
-        form { margin-bottom: 30px; padding: 15px; border: 1px solid #eee; border-radius: 4px; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        select, input { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-        button { background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 20px; }
-        button:hover { background-color: #2980b9; }
-        .scenario-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 4px; background-color: #fafafa; }
-        .scenario-title { font-size: 1.2em; font-weight: bold; color: #2c3e50; }
-        .scenario-section { margin-top: 10px; }
-        .scenario-section h4 { margin: 5px 0 0 0; color: #7f8c8d; }
-        .error { color: red; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор Пользовательских Сценариев</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Платформа для подготовки мероприятий о культуре народов России</h1>
-        <form id="scenarioForm">
-            <label for="theme">Тема:</label>
-            <select name="theme" id="theme" required>
-                <option value="">Выберите тему</option>
-                <!-- Опции будут заполнены скриптом -->
-            </select>
+    <main class="container">
+        <header>
+            <h1>Культурная платформа</h1>
+            <p>Генератор сценариев мероприятий</p>
+        </header>
 
-            <label for="age_group">Для кого:</label>
-            <select name="age_group" id="age_group" required>
-                <option value="">Выберите возраст</option>
-                <!-- Опции будут заполнены скриптом -->
-            </select>
+        <form id="scenarioForm" class="card">
+            <div class="form-group">
+                <label for="username">Тема мероприятия:</label>
+                <input type="text" id="username" name="username" placeholder="Введите тему:">
+            </div>
 
-            <label for="duration">Длительность занятия:</label>
-            <select name="duration" id="duration" required>
-                <option value="">Выберите длительность</option>
-                 <!-- Опции будут заполнены скриптом -->
-            </select>
+            <div class="form-group">
+                <label for="age_group">Для кого?</label>
+                <select id="age_group" name="age_group" required>
+                    <option value="">Выберите возраст</option>
+                    <option value="">Младшие классы</option>
+                    <option value="">Средние классы</option>
+                    <option value="">Страшие классы</option>
+                </select>
+            </div>
 
-            <label>Инструментарий (можно выбрать несколько):</label>
-             <!-- Чекбоксы будут заполнены скриптом -->
+            <div class="form-group">
+                <label for="participants">Количество участников</label>
+                <select id="participants" name="participants" required>
+                    <option value="">До 10</option>
+                    <option value="">До 25</option>
+                    <option value="">более 50</option>
+                </select>
+            </div>
 
-            <button type="submit">Сгенерировать сценарии</button>
+            <div class="form-group">
+                <label for="time">Длительность мероприятия?</label>
+                <select id="time" name="time" required>
+                    <option value="">30 мин</option>
+                    <option value="">60 мин</option>
+                    <option value="">несколько часов</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="experience">Был ли опыт проведения подобных мероприятий?</label>
+                <select id="experience" name="experience" required>
+                    <option value="">Да</option>
+                    <option value="">Нет</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="gender">Пол выступающего</label>
+                <select id="gender" name="gender" required>
+                    <option value="">Мужчина</option>
+                    <option value="">Женщина</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="item"> Подручные вещи или интерактивные устройства:</label>
+                <input type="text" id="item" name="item" placeholder="Название устройства:">
+            </div>
+
+
+
+            <button type="submit" id="submitBtn">Сгенерировать сценарии</button>
         </form>
 
-        <div id="results"></div>
-    </div>
-
-    <script>
-        // Заполняем форму данными при загрузке страницы
-        window.onload = function() {
-            const themeSelect = document.getElementById('theme');
-            const ageGroupSelect = document.getElementById('age_group');
-            const durationSelect = document.getElementById('duration');
-            const toolsContainer = document.querySelector('form');
-
-            // Пример данных (в реальном приложении они могут быть получены от сервера)
-            const themes = ['Легенды народов Кавказа', 'Праздники Сибири', 'Национальные костюмы Поволжья'];
-            const ageGroups = ['начальная_школа', 'средние_классы', 'старшеклассники'];
-            const durations = ['15_минут', '30_минут', 'целый_урок'];
-            const tools = ['телефоны_учеников', 'компьютер_учителя', 'интерактивная_доска', 'онлайн-викторины'];
-
-            themes.forEach(t => {
-                const opt = document.createElement('option');
-                opt.value = t;
-                opt.textContent = t;
-                themeSelect.appendChild(opt);
-            });
-
-            ageGroups.forEach(ag => {
-                const opt = document.createElement('option');
-                opt.value = ag;
-                opt.textContent = ag.replace('_', ' ');
-                ageGroupSelect.appendChild(opt);
-            });
-
-            durations.forEach(d => {
-                const opt = document.createElement('option');
-                opt.value = d;
-                opt.textContent = d.replace('_', ' ');
-                durationSelect.appendChild(opt);
-            });
-
-            const toolsLabel = document.createElement('label');
-            toolsLabel.style.display = 'block';
-            toolsLabel.textContent = 'Инструментарий (можно выбрать несколько):';
-            toolsContainer.insertBefore(toolsLabel, document.querySelector('button'));
-
-            tools.forEach(tool => {
-                const container = document.createElement('span');
-                container.style.display = 'inline-block';
-                container.style.marginRight = '15px';
-
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.name = 'tools';
-                checkbox.value = tool;
-
-                const lbl = document.createElement('label');
-                lbl.htmlFor = tool;
-                lbl.textContent = tool.replace('_', ' ');
-
-                container.appendChild(checkbox);
-                container.appendChild(lbl);
-                toolsLabel.appendChild(container);
-            });
-        };
-
-        document.getElementById('scenarioForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const data = {
-                theme: formData.get('theme'),
-                age_group: formData.get('age_group'),
-                duration: formData.get('duration'),
-                tools: Array.from(formData.getAll('tools'))
-            };
-
-            try {
-                const response = await fetch('/generate-scheme', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(data)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Ошибка: ${response.status}`);
-                }
-
-                const scenarios = await response.json();
-                displayScenarios(scenarios);
-            } catch (error) {
-                document.getElementById('results').innerHTML = `<p class="error">${error.message}</p>`;
-            }
-        });
-
-        function displayScenarios(scenarios) {
-            const resultsDiv = document.getElementById('results');
-            if (scenarios.length === 0) {
-                resultsDiv.innerHTML = '<p>Сценарии не найдены для выбранных параметров.</p>';
-                return;
-            }
-            let html = '';
-            scenarios.forEach(s => {
-                html += `
-                <div class="scenario-card">
-                    <div class="scenario-title">${s.title}</div>
-                    <div class="scenario-section"><strong>Целевая аудитория:</strong> ${s.target_audience}</div>
-                    <div class="scenario-section"><strong>Цель:</strong> ${s.goal}</div>
-                    <div class="scenario-section"><strong>Вступление:</strong> ${s.introduction}</div>
-                    <div class="scenario-section">
-                        <strong>Основная часть:</strong>
-                        <p><em>Игры/обсуждения:</em> ${s.main_part.games_and_discussions}</p>
-                        <p><em>Цифровые инструменты:</em> ${s.main_part.digital_tools}</p>
-                    </div>
-                    <div class="scenario-section"><strong>Рефлексия:</strong> ${s.reflection.activities}</div>
-                    <div class="scenario-section"><strong>Вывод:</strong> ${s.key_takeaway}</div>
-                </div>
-                `;
-            });
-            resultsDiv.innerHTML = html;
-        }
-    </script>
+        <section id="results"></section>
+    </main>
+    <script src="script.js"></script>
 </body>
 </html>
